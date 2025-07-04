@@ -1,0 +1,24 @@
+name: Generate PublicAPI with Docker
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate-with-docker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t public-api-generator .
+
+      - name: Run container to generate public API spec
+        run: docker run --rm -v ${{ github.workspace }}:/github/workspace public-api-generator
+
+      - name: Upload result artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-api-redocly.yaml
+          path: public-api-redocly.yaml
