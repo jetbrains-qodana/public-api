@@ -1,26 +1,24 @@
 #!/bin/bash
 set -e
 
-# copying fresh original openapi file
-cp /github/workspace/source-documentation/documentation.yaml /github/workspace/public-api-redocly.yaml
+echo "copying fresh original openapi file"
+cp /github/workspace/source-documentation/documentation.yaml openapi.yaml
 
-# removing everything except PublicAPI
-yq eval '
-  .paths |= with_entries(
-    select(
-      ((.value.get.tags // []) | contains(["PublicAPI"])) or
-      ((.value.post.tags // []) | contains(["PublicAPI"])) or
-      ((.value.put.tags // []) | contains(["PublicAPI"])) or
-      ((.value.delete.tags // []) | contains(["PublicAPI"]))
-    )
+echo "removing everything except PublicAPI"
+yq 'del(
+  .paths[] | select(
+    (.get.tags // [] | contains(["PublicAPI"]) | not) and
+    (.post.tags // [] | contains(["PublicAPI"]) | not) and
+    (.put.tags // [] | contains(["PublicAPI"]) | not) and
+    (.delete.tags // [] | contains(["PublicAPI"]) | not)
   )
-' -i /github/workspace/public-api-redocly.yaml
+)' -i openapi.yaml
 
-# removing obsolete /v1/public/... paths
-yq eval 'del(.paths."/v1/public")' -i /github/workspace/public-api-redocly.yaml
+echo "removing obsolete /v1/public/... paths"
+yq '.paths |= with_entries(select(.key | test("^/v1/public") | not))' -i openapi.yaml
 
-# removing unused tags
-yq eval '.tags |= map(select(.name == "PublicAPI"))' -i /github/workspace/public-api-redocly.yaml
+echo "removing unused tags"
+yq '.tags |= map(select(.name == "PublicAPI"))' -i openapi.yaml
 
-# calling redocly to remove all useless
-redocly bundle --config /github/workspace/redocly.yaml /github/workspace/public-api-redocly.yaml -o /github/workspace/public-api-redocly.yaml
+echo "calling redocly to remove all useless"
+redocly bundle --config redocly.yaml openapi.yaml -o openapi.yaml

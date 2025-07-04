@@ -20,5 +20,5 @@ jobs:
       - name: Upload result artifact
         uses: actions/upload-artifact@v4
         with:
-          name: public-api-redocly.yaml
-          path: public-api-redocly.yaml
+          name: openapi.yaml
+          path: openapi.yaml
