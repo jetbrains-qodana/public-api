@@ -1,7 +1,8 @@
 FROM node:18-slim
 
 RUN apt-get update && \
-    apt-get install -y yq npm && \
+    apt-get install -y python3-pip jq && \
+    pip install yq && \
     npm install -g @redocly/cli && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
