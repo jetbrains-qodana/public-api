@@ -31,8 +31,12 @@ jobs:
       - name: Commit and push generated file
         run: |
           git add openapi.yaml
-          git commit -m "Update generated openapi.yaml"
-          git push
+          if ! git diff --cached --quiet; then
+            git commit -m "Update generated openapi.yaml"
+            git push
+          else
+            echo "No changes to commit."
+          fi
         env:
           GIT_AUTHOR_NAME: github-actions[bot]
           GIT_AUTHOR_EMAIL: github-actions[bot]@users.noreply.github.com
