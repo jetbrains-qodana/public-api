@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build Docker image
-        run: docker build -t public-api-generator .
+        run: docker build -t public-api-generator ./generate-public-api
 
       - name: Run container to generate public API spec
         run: docker run --rm -v ${{ github.workspace }}:/github/workspace public-api-generator
