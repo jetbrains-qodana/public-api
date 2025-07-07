@@ -21,4 +21,4 @@ echo "removing unused tags"
 yq '.tags |= map(select(.name == "PublicAPI"))' -i openapi.yaml
 
 echo "calling redocly to remove all useless"
-redocly bundle --config redocly.yaml openapi.yaml -o openapi.yaml
+redocly bundle --config generate-public-api/redocly.yaml openapi.yaml -o openapi.yaml
