@@ -67,7 +67,7 @@ paths:
     post:
       tags:
         - PublicAPI
-      description: 'DEPRECATED: Use `/api/v1/public/organizations/projects/` instead. <br> Returns or creates project token for a project of a team. If the team or project does not exist, they will be created automatically.'
+      description: 'DEPRECATED: Use `/api/v1/public/organizations/projects/` instead. <br> Returns or creates a project token for a project of a team. If the team or project does not exist, they will be created automatically. <br> Note: Access to the endpoint is controlled by legacy ''allows_access_with_api_token'' setting.'
       requestBody:
         content:
           application/json:
@@ -115,8 +115,18 @@ paths:
     get:
       tags:
         - PublicAPI
-      description: Returns paginated list of users in the organization. Supports sorting and searching.
+      description: 'Returns paginated list of users in the organization. Supports sorting and searching. <br> Note: Access to the endpoint is controlled by legacy ''allows_access_with_api_token'' setting.'
       parameters:
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: number
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
         - name: order
           in: query
           required: false
