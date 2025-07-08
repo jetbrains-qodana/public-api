@@ -2259,7 +2259,8 @@ paths:
     delete:
       tags:
         - "Organizations"
-      description: ""
+      description: "Deletes Organization API token if exists. <br> It depends on 'Organizations.allowAccessWithApiToken'\
+        \ setting value, this dependency will be removed later."
       parameters:
         - name: "id"
           in: "path"
@@ -2280,7 +2281,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/APIError"
         "200":
-          description: "OK"
+          description: "OK <br> OK in case of success."
           content:
             '*/*':
               schema:
@@ -2288,7 +2289,9 @@ paths:
     get:
       tags:
         - "Organizations"
-      description: ""
+      description: "Returns Organization API token associated with an organization\
+        \ or Http 404 if the token is not available. <br> It depends on 'Organizations.allowAccessWithApiToken'\
+        \ setting value, this dependency will be removed later."
       parameters:
         - name: "id"
           in: "path"
@@ -2315,7 +2318,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/APIError"
         "200":
-          description: "OK"
+          description: "OK <br> Organization API token is stored in the 'token' property."
           content:
             '*/*':
               schema:
@@ -2323,7 +2326,9 @@ paths:
     post:
       tags:
         - "Organizations"
-      description: ""
+      description: "Creates Organization API token and returns a newly created token.\
+        \ <br> It depends on 'Organizations.allowAccessWithApiToken' setting value,\
+        \ this dependency will be removed later."
       parameters:
         - name: "id"
           in: "path"
@@ -2344,7 +2349,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/APIError"
         "200":
-          description: "OK"
+          description: "OK <br> Organization API token is stored in the 'token' property."
           content:
             '*/*':
               schema:
@@ -3889,8 +3894,10 @@ paths:
       tags:
         - "PublicAPI"
       description: "DEPRECATED: Use `/api/v1/public/organizations/projects/` instead.\
-        \ <br> Returns or creates project token for a project of a team. If the team\
-        \ or project does not exist, they will be created automatically."
+        \ <br> Returns or creates a project token for a project of a team. If the\
+        \ team or project does not exist, they will be created automatically. <br>\
+        \ Note: Access to the endpoint is controlled by legacy 'allows_access_with_api_token'\
+        \ setting."
       requestBody:
         content:
           application/json:
@@ -3939,8 +3946,19 @@ paths:
       tags:
         - "PublicAPI"
       description: "Returns paginated list of users in the organization. Supports\
-        \ sorting and searching."
+        \ sorting and searching. <br> Note: Access to the endpoint is controlled by\
+        \ legacy 'allows_access_with_api_token' setting."
       parameters:
+        - name: "offset"
+          in: "query"
+          required: false
+          schema:
+            type: "number"
+        - name: "limit"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
         - name: "order"
           in: "query"
           required: false
@@ -7646,7 +7664,8 @@ paths:
     delete:
       tags:
         - "Organizations"
-      description: ""
+      description: "Deletes Organization API token if exists. <br> It depends on 'Organizations.allowAccessWithApiToken'\
+        \ setting value, this dependency will be removed later."
       parameters:
         - name: "id"
           in: "path"
@@ -7667,7 +7686,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/APIError"
         "200":
-          description: "OK"
+          description: "OK <br> OK in case of success."
           content:
             '*/*':
               schema:
@@ -7675,7 +7694,9 @@ paths:
     get:
       tags:
         - "Organizations"
-      description: ""
+      description: "Returns Organization API token associated with an organization\
+        \ or Http 404 if the token is not available. <br> It depends on 'Organizations.allowAccessWithApiToken'\
+        \ setting value, this dependency will be removed later."
       parameters:
         - name: "id"
           in: "path"
@@ -7702,7 +7723,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/APIError"
         "200":
-          description: "OK"
+          description: "OK <br> Organization API token is stored in the 'token' property."
           content:
             '*/*':
               schema:
@@ -7710,7 +7731,9 @@ paths:
     post:
       tags:
         - "Organizations"
-      description: ""
+      description: "Creates Organization API token and returns a newly created token.\
+        \ <br> It depends on 'Organizations.allowAccessWithApiToken' setting value,\
+        \ this dependency will be removed later."
       parameters:
         - name: "id"
           in: "path"
@@ -7731,7 +7754,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/APIError"
         "200":
-          description: "OK"
+          description: "OK <br> Organization API token is stored in the 'token' property."
           content:
             '*/*':
               schema:
@@ -9276,8 +9299,10 @@ paths:
       tags:
         - "PublicAPI"
       description: "DEPRECATED: Use `/api/v1/public/organizations/projects/` instead.\
-        \ <br> Returns or creates project token for a project of a team. If the team\
-        \ or project does not exist, they will be created automatically."
+        \ <br> Returns or creates a project token for a project of a team. If the\
+        \ team or project does not exist, they will be created automatically. <br>\
+        \ Note: Access to the endpoint is controlled by legacy 'allows_access_with_api_token'\
+        \ setting."
       requestBody:
         content:
           application/json:
@@ -9326,8 +9351,19 @@ paths:
       tags:
         - "PublicAPI"
       description: "Returns paginated list of users in the organization. Supports\
-        \ sorting and searching."
+        \ sorting and searching. <br> Note: Access to the endpoint is controlled by\
+        \ legacy 'allows_access_with_api_token' setting."
       parameters:
+        - name: "offset"
+          in: "query"
+          required: false
+          schema:
+            type: "number"
+        - name: "limit"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
         - name: "order"
           in: "query"
           required: false
