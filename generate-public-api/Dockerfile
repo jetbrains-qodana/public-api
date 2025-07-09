@@ -12,4 +12,4 @@ RUN chmod +x /app/generate-public-api.sh
 
 WORKDIR /github/workspace
 
-ENTRYPOINT ["/app/generate-public-api.sh"]
+CMD ["/app/generate-public-api.sh"]
