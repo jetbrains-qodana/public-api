@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
 echo "copying fresh original openapi file"
 cp /github/workspace/source-documentation/documentation.yaml openapi.yaml
