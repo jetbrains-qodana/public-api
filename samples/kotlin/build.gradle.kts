@@ -54,9 +54,9 @@ tasks.named("openApiGenerate") {
             val updatedContent = newFile.readText().replace("class $oldName", "class $newName")
             newFile.writeText(updatedContent)
 
-            println("✅ Renamed $oldName to $newName")
+            println("Renamed $oldName to $newName")
         } else {
-            println("⚠️ Could not find $oldName.kt")
+            println("Could not find $oldName.kt")
         }
     }
 }
