@@ -14,9 +14,6 @@ yq 'del(
   )
 )' -i openapi.yaml
 
-echo "removing obsolete /v1/public/... paths"
-yq '.paths |= with_entries(select(.key | test("^/v1/public") | not))' -i openapi.yaml
-
 echo "removing unused tags"
 yq '.tags |= map(select(.name == "PublicAPI"))' -i openapi.yaml
 
