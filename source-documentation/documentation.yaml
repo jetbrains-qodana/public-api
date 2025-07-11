@@ -2,7 +2,7 @@ openapi: "3.1.0"
 info:
   title: "cloud API"
   description: "cloud API"
-  version: "NO_VERSION"
+  version: "1.0.0"
 servers:
   - url: "https://cloud"
 tags:
@@ -3085,13 +3085,25 @@ paths:
     get:
       tags:
         - "Projects"
-      description: ""
+      description: "Retrieves branches list <br> possible values for excludeStale:\
+        \ true, false; default: false <br> possible values for sort: name; default:\
+        \ name <br> possible values for order: asc_default_first; default: asc_default_first"
       parameters:
         - name: "excludeStale"
           in: "query"
           required: false
           schema:
             type: "boolean"
+        - name: "sort"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+        - name: "order"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
         - name: "id"
           in: "path"
           required: true
@@ -3892,7 +3904,7 @@ paths:
   /api/v1/public/organizations/teams/projects:
     post:
       tags:
-        - "PublicAPI"
+        - "Organizations"
       description: "DEPRECATED: Use `/api/v1/public/organizations/projects/` instead.\
         \ <br> Returns or creates a project token for a project of a team. If the\
         \ team or project does not exist, they will be created automatically. <br>\
@@ -8490,13 +8502,25 @@ paths:
     get:
       tags:
         - "Projects"
-      description: ""
+      description: "Retrieves branches list <br> possible values for excludeStale:\
+        \ true, false; default: false <br> possible values for sort: name; default:\
+        \ name <br> possible values for order: asc_default_first; default: asc_default_first"
       parameters:
         - name: "excludeStale"
           in: "query"
           required: false
           schema:
             type: "boolean"
+        - name: "sort"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+        - name: "order"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
         - name: "id"
           in: "path"
           required: true
@@ -9239,65 +9263,10 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/MatchingProjectListResponse"
-  /v1/public/organizations/projects:
-    post:
-      tags:
-        - "PublicAPI"
-      description: "Returns the project token for the specified team. If the team\
-        \ or project does not exist, they will be created automatically."
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ProjectTokenRequest"
-        required: true
-      responses:
-        "400":
-          description: "Bad Request"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/APIError"
-        "401":
-          description: "Unauthorized"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/APIError"
-        "403":
-          description: "Forbidden"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/APIError"
-        "404":
-          description: "Not Found"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/APIError"
-        "201":
-          description: "Created <br> Project token for newly created project"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ProjectTokenResponse"
-        "200":
-          description: "OK <br> Project token for existing project"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ProjectTokenResponse"
-        "500":
-          description: "Internal Server Error"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/APIError"
   /v1/public/organizations/teams/projects:
     post:
       tags:
-        - "PublicAPI"
+        - "Organizations"
       description: "DEPRECATED: Use `/api/v1/public/organizations/projects/` instead.\
         \ <br> Returns or creates a project token for a project of a team. If the\
         \ team or project does not exist, they will be created automatically. <br>\
@@ -9349,7 +9318,7 @@ paths:
   /v1/public/organizations/users:
     get:
       tags:
-        - "PublicAPI"
+        - "Organizations"
       description: "Returns paginated list of users in the organization. Supports\
         \ sorting and searching. <br> Note: Access to the endpoint is controlled by\
         \ legacy 'allows_access_with_api_token' setting."
@@ -13123,7 +13092,6 @@ components:
           type: "array"
           items:
             type: "string"
-          uniqueItems: true
       required:
         - "branches"
     IntegrateWithCIRequest:
