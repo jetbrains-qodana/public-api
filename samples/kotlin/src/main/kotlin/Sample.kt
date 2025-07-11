@@ -9,9 +9,8 @@ fun main() {
         projectName = "my-project"
     )
 
-    // todo add 'operationId'
     // todo add 'Authorization'
-    val response = api.apiV1PublicOrganizationsProjectsPost(request)
+    val response = api.getProjectToken(request)
 
     println("Project token: ${response.projectToken}")
 }

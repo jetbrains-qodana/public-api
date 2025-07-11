@@ -17,5 +17,9 @@ yq 'del(
 echo "removing unused tags"
 yq '.tags |= map(select(.name == "PublicAPI"))' -i openapi.yaml
 
+echo "setting custom operationId for selected endpoints"
+yq '.paths["/api/v1/public/organizations/projects"].post.operationId = "getProjectToken"' -i openapi.yaml
+yq '.paths["/api/v1/public/organizations/users"].get.operationId = "getOrganizationUsers"' -i openapi.yaml
+
 echo "calling redocly to remove all useless"
 redocly bundle --config generate-public-api/redocly.yaml openapi.yaml -o openapi.yaml
