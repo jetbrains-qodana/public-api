@@ -7,9 +7,9 @@ RUN apt-get update && \
     npm install -g @redocly/cli && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-COPY generate-public-api.sh /app/generate-public-api.sh
-RUN chmod +x /app/generate-public-api.sh
+COPY generate-public-api.sh /usr/local/bin/generate-public-api.sh
+RUN chmod +x /usr/local/bin/generate-public-api.sh
 
-WORKDIR /github/workspace
+WORKDIR /app
 
-CMD ["/app/generate-public-api.sh"]
+CMD ["/usr/local/bin/generate-public-api.sh"]

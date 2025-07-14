@@ -2,7 +2,7 @@
 set -euo pipefail
 
 echo "copying fresh original openapi file"
-cp /github/workspace/source-documentation/documentation.yaml openapi.yaml
+cp source-documentation/documentation.yaml openapi.yaml
 
 echo "removing everything except PublicAPI"
 yq 'del(

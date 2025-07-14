@@ -15,7 +15,7 @@ jobs:
         run: docker build -t public-api-generator ./generate-public-api
 
       - name: Run container to generate public API spec
-        run: docker run --rm -v ${{ github.workspace }}:/github/workspace public-api-generator
+        run: docker run --rm -v ${{ github.workspace }}:/app public-api-generator
 
       - name: Upload result artifact
         uses: actions/upload-artifact@v4
