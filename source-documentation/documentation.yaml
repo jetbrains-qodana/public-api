@@ -3850,7 +3850,7 @@ paths:
     post:
       tags:
         - "PublicAPI"
-      description: "Returns the project token for the specified team. If the team\
+      description: "Returns the project token for the specified project. If the team\
         \ or project does not exist, they will be created automatically."
       requestBody:
         content:
@@ -3883,24 +3883,24 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/APIError"
-        "201":
-          description: "Created <br> Project token for newly created project"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ProjectTokenResponse"
-        "200":
-          description: "OK <br> Project token for existing project"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ProjectTokenResponse"
         "500":
           description: "Internal Server Error"
           content:
             '*/*':
               schema:
                 $ref: "#/components/schemas/APIError"
+        "201":
+          description: "Created <br> Project token for a newly created project"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ProjectTokenResponse"
+        "200":
+          description: "OK <br> Project token for the existing project"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ProjectTokenResponse"
   /api/v1/public/organizations/teams/projects:
     post:
       tags:
