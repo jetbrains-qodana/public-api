@@ -13,7 +13,7 @@ paths:
     post:
       tags:
         - PublicAPI
-      description: Returns the project token for the specified team. If the team or project does not exist, they will be created automatically.
+      description: Returns the project token for the specified project. If the team or project does not exist, they will be created automatically.
       requestBody:
         content:
           application/json:
@@ -22,13 +22,13 @@ paths:
         required: true
       responses:
         '200':
-          description: OK <br> Project token for existing project
+          description: OK <br> Project token for the existing project
           content:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ProjectTokenResponse'
         '201':
-          description: Created <br> Project token for newly created project
+          description: Created <br> Project token for a newly created project
           content:
             '*/*':
               schema:
