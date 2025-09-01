@@ -1,4 +1,4 @@
-openapi: 3.1.0
+openapi: 3.0.3
 info:
   title: cloud API
   description: cloud API
@@ -13,7 +13,7 @@ paths:
     post:
       tags:
         - PublicAPI
-      description: Returns the project token for the specified project. If the team or project does not exist, they will be created automatically.
+      description: 'Returns the project token for the specified project. If the team or project does not exist, they will be created automatically. <br> Note: Availability of the endpoint depends on Public API feature flag.'
       requestBody:
         content:
           application/json:
@@ -68,7 +68,7 @@ paths:
     get:
       tags:
         - PublicAPI
-      description: 'Returns paginated list of users in the organization. Supports sorting and searching. <br> Note: Access to the endpoint is controlled by legacy ''allows_access_with_api_token'' setting.'
+      description: 'Returns paginated list of users in the organization. Supports sorting and searching. <br> Note: Access to the endpoint is controlled by legacy ''allows_access_with_api_token'' setting. Later it will be replaced with Public API feature flag.'
       parameters:
         - name: offset
           in: query
@@ -212,32 +212,22 @@ components:
           type: string
         email:
           type: string
-          nullable: true
         displayName:
           type: string
         role:
           type: string
-          nullable: true
           enum:
             - OWNER
             - ADMIN
             - EDITOR
             - VIEWER
-        isActive:
-          type: boolean
-        isSsoManaged:
-          type: boolean
         invitationId:
           type: string
-          nullable: true
         invitationUrl:
           type: string
-          nullable: true
       required:
         - id
         - displayName
-        - isActive
-        - isSsoManaged
     PaginatedList_OrganizationUser:
       type: object
       properties:
@@ -247,17 +237,14 @@ components:
         next:
           type: integer
           format: int64
-          nullable: true
         prev:
           type: integer
           format: int64
-          nullable: true
         items:
           type: array
           items:
             $ref: '#/components/schemas/OrganizationUser'
       required:
-        - count
         - items
     ProjectTokenRequest:
       type: object
