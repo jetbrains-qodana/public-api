@@ -1,0 +1,265 @@
+openapi: 3.0.3
+info:
+  title: cloud API
+  description: cloud API
+  version: 1.0.0
+servers:
+  - url: https://cloud
+tags:
+  - name: PublicAPI
+    description: Qodana Cloud Public API
+paths:
+  /api/v1/public/organizations/projects:
+    post:
+      tags:
+        - PublicAPI
+      description: 'Returns the project token for the specified project. If the team or project does not exist, they will be created automatically. <br> Note: Availability of the endpoint depends on Public API feature flag.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectTokenRequest'
+        required: true
+      responses:
+        '200':
+          description: OK <br> Project token for the existing project
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ProjectTokenResponse'
+        '201':
+          description: Created <br> Project token for a newly created project
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ProjectTokenResponse'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/APIError'
+      operationId: getProjectToken
+  /api/v1/public/organizations/users:
+    get:
+      tags:
+        - PublicAPI
+      description: 'Returns paginated list of users in the organization. Supports sorting and searching. <br> Note: Access to the endpoint is controlled by legacy ''allows_access_with_api_token'' setting. Later it will be replaced with Public API feature flag.'
+      parameters:
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: number
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: order
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK <br> List for organization users
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PaginatedList_OrganizationUser'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/APIError'
+      operationId: getOrganizationUsers
+components:
+  schemas:
+    APIError:
+      type: object
+      properties:
+        name:
+          type: string
+          enum:
+            - NO_LICENSE_AGREEMENT
+            - USER_DELETED
+            - NO_CREDENTIALS_PROVIDED
+            - VALIDATION_FAILED
+            - INVITE_OR_MEMBERSHIP_REQUEST
+            - PROJECT_EXISTS
+            - TEAM_EXISTS
+            - LICENSE_ISSUING_FAILED
+            - LICENSE_ISSUING_TIMEOUT
+            - LICENSE_NOT_FOUND
+            - INVALID_TOKEN
+            - USER_NOT_MEMBER
+            - USER_INVITATION_NOT_ACCEPTED
+            - SINGLE_ORGANIZATIONS_OWNER
+            - NO_AUTH
+            - TEAMS_MISSING
+            - NO_PERMISSION
+            - NO_LICENSE_PLAN
+            - FEATURE_NOT_SUPPORTED
+            - NO_LICENSE
+            - NO_USER
+            - USER_EXISTS
+            - LICENSE_ACCEPTED
+            - NO_JBA_USER
+            - INVITATION_NOT_CREATED
+            - ORGANIZATION_ROLE_EXISTS
+            - NO_ORGANIZATION
+            - INVITATION_EXPIRED
+            - FAILED_EMAIL_SENDING
+            - NO_TEAM
+            - TEAM_ROLE_EXISTS
+            - NO_TEAM_USER_EXISTS
+            - NO_REPORT
+            - REPORT_UNAVAILABLE
+            - NO_MEMBERSHIP_REQUEST_EXISTS
+            - PROBE_REPOSITORY_FAILED
+            - NO_PROJECT
+            - PROJECT_CONTRIBUTORS_DELETE_FAILURE
+            - LICENSE_ALREADY_ISSUED
+            - BAD_TOKEN
+            - BAD_CREDENTIALS
+            - NO_USER_TOKEN
+            - OAUTH_REFRESH_TOKENS_ERROR
+            - OAUTH_FETCH_MANAGED_CUSTOMERS_ERROR
+            - LICENSE_ALREADY_EXISTS
+            - NO_HTTPS_OR_SSH_URL
+            - NO_TOKEN
+            - NO_FILTER_SELECTION
+            - WRONG_STATE
+            - USER_NOT_LICENSE_ACTIVATION_RECIPIENT
+            - LICENSE_ERROR
+            - ONE_TRIAL_LICENSE_IS_ALLOWED_ERROR
+            - NO_REPOSITORY
+            - JBA_LICENSE_INVITATION_NOT_FOUND
+            - LICENSE_ALREADY_IN_USE
+            - UNKNOWN
+            - NO_SSH_KEY
+            - OWNER_ROLE_CANT_BE_CHANGED
+            - TABLE_SIGNATURE_UNVERIFIED
+            - BROKEN_SIGNATURE_FORMAT
+            - CREATE_REPOSITORY_FAILED
+            - GITHUB_JWT_GENERATION_FAILED
+            - EXTERNAL_SERVICE_REQUEST_FAILED
+            - CI_INTEGRATION_NOT_FOUND
+            - CI_INTEGRATION_ALREADY_EXISTS
+            - VCS_INTEGRATION_NOT_FOUND
+            - VCS_PROBING_NOT_PASSED
+            - VCS_INTEGRATION_ALREADY_EXISTS
+            - GITHUB_INSTALLATION_NOT_EXISTS
+            - UNKNOWN_VCS_LOGIN_STATE
+            - UNKNOWN_VCS_SETUP_ACTION
+            - FORBIDDEN_BASELINE
+            - MISSING_BRANCH_PARAM
+            - BASELINE_NOT_FOUND
+            - INVALID_ROLE
+            - NO_ORGANIZATION_API_TOKEN_EXISTS
+            - ORGANIZATION_API_TOKEN_ALREADY_EXISTS
+            - PROJECT_TOKEN_CREATION_FAILED
+            - TOKEN_ALREADY_EXISTS
+            - GLOBAL_CONFIGURATION_NOT_FOUND
+            - PUBLIC_API_DISABLED
+            - TOO_MANY_PROJECTS_FOR_ORGANIZATION
+        details:
+          type: string
+      required:
+        - name
+        - details
+    OrganizationUser:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        displayName:
+          type: string
+        role:
+          type: string
+          enum:
+            - OWNER
+            - ADMIN
+            - EDITOR
+            - VIEWER
+        invitationId:
+          type: string
+        invitationUrl:
+          type: string
+      required:
+        - id
+        - displayName
+    PaginatedList_OrganizationUser:
+      type: object
+      properties:
+        count:
+          type: integer
+          format: int64
+        next:
+          type: integer
+          format: int64
+        prev:
+          type: integer
+          format: int64
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationUser'
+      required:
+        - items
+    ProjectTokenRequest:
+      type: object
+      properties:
+        teamName:
+          type: string
+        projectName:
+          type: string
+      required:
+        - teamName
+        - projectName
+    ProjectTokenResponse:
+      type: object
+      properties:
+        projectToken:
+          type: string
+      required:
+        - projectToken

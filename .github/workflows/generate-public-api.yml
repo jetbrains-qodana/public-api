@@ -12,13 +12,30 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build Docker image
-        run: docker build -t public-api-generator .
+        run: docker build -t public-api-generator ./generate-public-api
 
       - name: Run container to generate public API spec
-        run: docker run --rm -v ${{ github.workspace }}:/github/workspace public-api-generator
+        run: docker run --rm -v ${{ github.workspace }}:/app public-api-generator
 
       - name: Upload result artifact
         uses: actions/upload-artifact@v4
         with:
-          name: public-api-redocly.yaml
-          path: public-api-redocly.yaml
+          name: openapi.yaml
+          path: openapi.yaml
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit and push generated file
+        run: |
+          git add openapi.yaml
+          if ! git diff --cached --quiet; then
+            git commit -m "Update generated openapi.yaml"
+            git push
+          else
+            echo "No changes to commit."
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
