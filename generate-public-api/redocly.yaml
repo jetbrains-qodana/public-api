@@ -1,5 +1,0 @@
-decorators:
-  filter-in:
-    property: tags
-    value: PublicAPI
-  remove-unused-components: on
