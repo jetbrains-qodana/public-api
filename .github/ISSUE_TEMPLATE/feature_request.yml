@@ -1,7 +1,8 @@
 name: "✨ Feature Request: New API"
 description: Suggest a new API feature for this project
 title: "[Feature Request] <short description>"
-labels: [feature, api]
+labels: [feature-request]
+type: feature
 assignees: []
 body:
   - type: markdown
