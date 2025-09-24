@@ -1,0 +1,41 @@
+name: "📝 Task"
+description: Request a new task or improvement for this project
+title: "[Task] <short description>"
+labels: [task]
+type: task
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Task
+
+        Please describe the task or improvement.
+
+  - type: input
+    id: summary
+    attributes:
+      label: Task summary
+      description: Briefly summarize the task.
+      placeholder: "Update API documentation for new endpoints"
+
+  - type: textarea
+    id: details
+    attributes:
+      label: Task details
+      description: Describe what needs to be done.
+      placeholder: "Add usage examples for /api/v1/public/organizations/users..."
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Define how to verify the task is complete.
+      placeholder: "Documentation includes request/response samples"
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Add any other context, related issues, or screenshots.
+      placeholder: "Related issues: #456, screenshots, links"
