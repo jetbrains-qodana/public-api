@@ -4,7 +4,7 @@ create teams and projects using your build pipelines.
 
 ## Contents
 This repository contains
-* `openapi.yaml` - OpenAPI specification of Public API. This file updates everytime when Public API is added or changed.
+* `openapi.yaml` - OpenAPI specification of the REST API. This file updates when new changes in the API are implemented.
 * `samples/kotlin` - Sample client in Kotlin based on code generation over `openapi.yaml`.
 
 ## How to use the API
