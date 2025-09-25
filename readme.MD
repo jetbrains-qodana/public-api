@@ -1,5 +1,5 @@
 # Qodana Public API
-Qodana Cloud and Qodana Self-Hosted provide the Public API that lets you 
+Qodana Cloud and Qodana Self-Hosted provide the public REST API that lets you 
 create teams and projects using your build pipelines.
 
 ## Contents
