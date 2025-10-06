@@ -1,0 +1,58 @@
+name: "🐞 Bug Report"
+description: Report a bug or unexpected behavior in the project
+title: "[Bug] <short description>"
+labels: [bug]
+type: bug
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Bug Report
+
+        Please provide detailed information to help us reproduce and fix the issue.
+
+  - type: input
+    id: summary
+    attributes:
+      label: Bug summary
+      description: Briefly describe the bug.
+      placeholder: "API returns 500 error on valid request"
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: List the steps to reproduce the issue.
+      placeholder: |
+        1. Send POST to /api/v1/public/organizations/projects
+        2. Use valid payload
+        3. Observe error
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen?
+      placeholder: "Project token should be returned"
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What actually happened?
+      placeholder: "Received 500 Internal Server Error"
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include relevant environment details (OS, language, version, etc.).
+      placeholder: "macOS, Kotlin 1.9, Java 17, Gradle 8.0"
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Add any other context, logs, or screenshots.
+      placeholder: "Error logs, related issues, screenshots"

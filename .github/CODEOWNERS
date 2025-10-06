@@ -1,0 +1,8 @@
+# All files require review from a Cloud Backend team
+* @jetbrains-qodana/cloud-backend
+
+# All files in the .github directory require review from the Cloud Infra team
+.github/* @jetbrains-qodana/cloud-infra
+
+# README file requires review from Technical Writers or Cloud Backend team
+README.md @jetbrains-qodana/technical-writers @jetbrains-qodana/cloud-backend
