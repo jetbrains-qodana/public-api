@@ -3,10 +3,10 @@
 ## Introduction
 
 Thank you for your interest in contributing to the `public-api` repository!  
-This repository contains a single file — `openapi.yaml` — which defines our **public API specification**.
+This repository contains `openapi.yaml` which defines our **public API specification**.
 
 To maintain a consistent and stable API contract, we manage all contributions **through GitHub issues**.  
-Direct pull requests to the `openapi.yaml` file are **not accepted** — please start by opening an issue instead.
+Direct pull requests to the `openapi.yaml` file are **not accepted** - please start by opening an issue instead.
 
 ## How to contribute
 
@@ -73,23 +73,16 @@ Select **“Task”** when creating your issue.
 
 ## Issue review process
 
-1. A maintainer will triage your issue and confirm the type.
+1. A maintainer will triage your issue and confirm its type.
 2. Discussion may follow to clarify details or validate the proposal.
-3. Once approved, the maintainers will update the `openapi.yaml` accordingly.
-4. Changes will be included in the next published version of the public API.
+3. Once approved, the requested changes will be planned and implemented in the Qodana Cloud codebase.
+4. After the changes are implemented and included in the next published release, the `openapi.yaml` file will be updated to reflect the current API state of Qodana Cloud.
 
 ## Guidelines
 
 - One topic per issue — please don’t mix bugs, questions, and proposals.
 - Keep descriptions clear and concise.
 - Use **English** when possible to make discussions accessible to everyone.
-- Be respectful and follow our community code of conduct (if present).
-
-## Links
-
-- [🐞 Bug Report](../../issues/new?template=bug-report.md)
-- [✨ Feature Request: New API](../../issues/new?template=feature-request-new-api.md)
-- [❓ Question](../../issues/new?template=question.md)
-- [📝 Task](../../issues/new?template=task.md)
+- Be respectful and follow our Сode of Сonduct.
 
 Thank you for helping us make the public API better and more reliable for everyone!
