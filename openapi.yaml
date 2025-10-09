@@ -68,7 +68,7 @@ paths:
     get:
       tags:
         - PublicAPI
-      description: 'Returns paginated list of users in the organization. Supports sorting and searching. <br> Note: Access to the endpoint is controlled by legacy ''allows_access_with_api_token'' setting. Later it will be replaced with Public API feature flag.'
+      description: 'Returns paginated list of users in the organization. Supports sorting and searching. <br> Note: Availability of the endpoint depends on Public API feature flag.'
       parameters:
         - name: offset
           in: query
@@ -97,6 +97,12 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/PaginatedList_OrganizationUser'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/APIError'
         '401':
           description: Unauthorized
           content:
