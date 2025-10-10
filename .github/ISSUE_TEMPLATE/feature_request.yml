@@ -1,0 +1,48 @@
+name: "✨ Feature Request: New API"
+description: Suggest a new API feature for this project
+title: "[Feature Request] <short description>"
+labels: [feature-request]
+type: feature
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Feature Request: New API
+
+        Thank you for contributing! Please provide as much detail as possible.
+
+  - type: input
+    id: summary
+    attributes:
+      label: Feature summary
+      description: Briefly summarize the feature you are requesting.
+      placeholder: "Add endpoint to retrieve project statistics"
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem statement
+      description: What problem does this feature solve?
+      placeholder: "Currently, there is no way to..."
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: Describe the desired API endpoint, request/response structure, and any relevant details.
+      placeholder: "A new GET /api/v1/public/organizations/projects/stats endpoint..."
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: List any alternative solutions or features you have considered.
+      placeholder: "Could use existing endpoints, but they lack..."
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Add any other context, related issues, or screenshots.
+      placeholder: "Related issues: #123, screenshots, links"

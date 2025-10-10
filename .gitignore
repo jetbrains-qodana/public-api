@@ -1,0 +1,6 @@
+/.gradle/
+/.idea/
+/build/
+/samples/**/.gradle/
+/samples/**/.idea/
+/samples/**/build/
