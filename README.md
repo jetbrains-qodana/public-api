@@ -1,6 +1,4 @@
-[![official JetBrains project](https://jb.gg/badges/official.svg)](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub)
-
-# Qodana public API
+# Qodana public API [![official JetBrains project](https://jb.gg/badges/official.svg)](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub)
 
 Qodana Cloud and Qodana Self-Hosted provide the public REST API that lets you use build pipelines for:
 
@@ -13,11 +11,11 @@ This repository contains
 * `samples/kotlin` - Sample client in Kotlin based on code generation over `openapi.yaml`.
 
 ## Documentation
-The detailed documentation explaining how to use Qodana public API can be found there https://www.jetbrains.com/help/qodana/cloud-api.html.
+Comprehensive information about Qodana Public API is available in the [official documentation](https://www.jetbrains.com/help/qodana/cloud-api.html).
 
-Brief documentation is provided below.
+A brief summary and examples are provided below for convenience.
 
-## Brief documentation
+## Quick reference
 ### Prerequisites
 
 The public API requires an organization API token for authentication purposes.
@@ -61,7 +59,7 @@ Below is the brief explanation of HTTP responses of the endpoint:
 * HTTP 404 - Endpoint not found 
 * HTTP 500 - The internal server error returns if a project token could not be created
 
-See more details and response sample at full documentation.
+Refer to the full documentation for complete details and sample responses.
         
 ### Get a list of organization users
 
@@ -99,7 +97,7 @@ Below is the brief explanation of HTTP responses of the endpoint:
 * HTTP 404 - Endpoint not found
 * HTTP 500 - The internal server error returns if a project token could not be created
 
-See more details and response sample at full documentation.
+Refer to the full documentation for complete details and sample responses.
 
 ## License
 
