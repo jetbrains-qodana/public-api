@@ -13,7 +13,7 @@ paths:
     post:
       tags:
         - PublicAPI
-      description: 'Returns the project token for the specified project. If the team or project does not exist, they will be created automatically. <br> Note: Availability of the endpoint depends on Public API feature flag.'
+      description: 'Returns the project token for the specified project. If the team or project does not exist, they will be created automatically. <br> Note: Available for organizations on Ultimate Plus license plan only.'
       requestBody:
         content:
           application/json:
@@ -68,7 +68,7 @@ paths:
     get:
       tags:
         - PublicAPI
-      description: 'Returns paginated list of users in the organization. Supports sorting and searching. <br> Note: Availability of the endpoint depends on Public API feature flag.'
+      description: 'Returns paginated list of users in the organization. Supports sorting and searching. <br> Note: Available for organizations on Ultimate Plus license plan only.'
       parameters:
         - name: offset
           in: query
