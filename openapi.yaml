@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: cloud API
   description: cloud API
-  version: 1.34.0-port-QD-12567-add-sem-ver-to-openapi.1
+  version: 1.34.0
 servers:
   - url: https://cloud
 tags:
