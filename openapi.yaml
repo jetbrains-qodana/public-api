@@ -2,14 +2,121 @@ openapi: 3.0.3
 info:
   title: cloud API
   description: cloud API
-  version: 1.0.0
+  version: 1.35.0
 servers:
   - url: https://cloud
 tags:
   - name: PublicAPI
     description: Qodana Cloud Public API
 paths:
+  /api/v1/public/organizations/inspection-insights/query:
+    post:
+      tags:
+        - PublicAPI
+      description: Runs a query for a list of inspection counts at a point in time across projects.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiQueryInsightsRequest'
+        required: true
+      responses:
+        '200':
+          description: OK <br> A list of inspections counts, where one entry exists for each unique combination of inspection ID, severity <br> and timestamp. If a time range is specified, entries for 10 equally distant timestamps within the range are <br> returned. If no time range is specified, entries at the latest timestamp are returned.
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiQueryInspectionInsightsResponse'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/APIError'
+  /api/v1/public/organizations/project-insights/query:
+    post:
+      tags:
+        - PublicAPI
+      description: Runs a query for a list of projects with scan analysis data at a point in time.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiQueryInsightsRequest'
+        required: true
+      responses:
+        '200':
+          description: OK <br> A list of projects with scan data for the given timestamp, where one entry exists for each unique <br> combination of project ID and timestamp. If a time range is specified, entries for 10 equally distant <br> timestamps within the range are returned. If no time range is specified, entries at the latest timestamp <br> are returned.
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiQueryProjectInsightsResponse'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/APIError'
   /api/v1/public/organizations/projects:
+    get:
+      tags:
+        - PublicAPI
+      description: Get a project with report data by name
+      parameters:
+        - name: projectName
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK <br> Returns a project with metadata, including the latest report data for the default branch. Note that inspections <br> are only listed for qodana linter versions >= 24.2
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiGetProjectResponse'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/APIError'
     post:
       tags:
         - PublicAPI
@@ -64,6 +171,42 @@ paths:
               schema:
                 $ref: '#/components/schemas/APIError'
       operationId: getProjectToken
+  /api/v1/public/organizations/projects/{projectId}:
+    get:
+      tags:
+        - PublicAPI
+      description: Get a project with report data by id
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK <br> Returns a project with metadata, including the latest report data for the default branch. Note that inspections <br> are only listed for qodana linter versions >= 24.2
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiGetProjectResponse'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/APIError'
   /api/v1/public/organizations/users:
     get:
       tags:
@@ -211,6 +354,30 @@ components:
       required:
         - name
         - details
+    Instant:
+      type: object
+      properties: {}
+    ProblemsBySeverity:
+      type: object
+      properties:
+        info:
+          type: integer
+          format: int32
+        low:
+          type: integer
+          format: int32
+        moderate:
+          type: integer
+          format: int32
+        high:
+          type: integer
+          format: int32
+        critical:
+          type: integer
+          format: int32
+        total:
+          type: integer
+          format: int32
     OrganizationUser:
       type: object
       properties:
@@ -252,6 +419,185 @@ components:
             $ref: '#/components/schemas/OrganizationUser'
       required:
         - items
+    TimeRange:
+      type: object
+      properties:
+        start:
+          $ref: '#/components/schemas/Instant'
+        end:
+          $ref: '#/components/schemas/Instant'
+      required:
+        - start
+        - end
+    ApiQueryInsightsRequest:
+      type: object
+      properties:
+        includeProjectIds:
+          type: array
+          items:
+            type: string
+        includeInspectionIds:
+          type: array
+          items:
+            type: string
+        includeTeamIds:
+          type: array
+          items:
+            type: string
+        timeRange:
+          $ref: '#/components/schemas/TimeRange'
+    ApiQueryInspectionResult:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        severity:
+          type: string
+          enum:
+            - CRITICAL
+            - HIGH
+            - MODERATE
+            - INFO
+            - LOW
+        baseline:
+          type: integer
+          format: int32
+        actual:
+          type: integer
+          format: int32
+        timestamp:
+          $ref: '#/components/schemas/Instant'
+      required:
+        - id
+        - name
+        - severity
+        - timestamp
+    ApiQueryInspectionInsightsResponse:
+      type: object
+      properties:
+        inspections:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApiQueryInspectionResult'
+      required:
+        - inspections
+    CodeCoverage:
+      type: object
+      properties:
+        percentage:
+          type: integer
+          format: int32
+    LicenseAudit:
+      type: object
+      properties: {}
+    ApiQueryProject:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        teamId:
+          type: string
+        teamName:
+          type: string
+        codeCoverage:
+          $ref: '#/components/schemas/CodeCoverage'
+        licenseAudit:
+          $ref: '#/components/schemas/LicenseAudit'
+        severityToActualProblems:
+          $ref: '#/components/schemas/ProblemsBySeverity'
+        severityToBaselineProblems:
+          $ref: '#/components/schemas/ProblemsBySeverity'
+        timestamp:
+          $ref: '#/components/schemas/Instant'
+      required:
+        - id
+        - name
+        - teamId
+        - teamName
+        - codeCoverage
+        - licenseAudit
+        - severityToActualProblems
+        - severityToBaselineProblems
+        - timestamp
+    ApiQueryProjectInsightsResponse:
+      type: object
+      properties:
+        projects:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApiQueryProject'
+      required:
+        - projects
+    ApiGetProjectInspection:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        severity:
+          type: string
+          enum:
+            - CRITICAL
+            - HIGH
+            - MODERATE
+            - INFO
+            - LOW
+        baseline:
+          type: integer
+          format: int32
+        actual:
+          type: integer
+          format: int32
+      required:
+        - id
+        - name
+        - severity
+    ApiGetProjectReport:
+      type: object
+      properties:
+        id:
+          type: string
+        timestamp:
+          $ref: '#/components/schemas/Instant'
+        licenseAudit:
+          $ref: '#/components/schemas/LicenseAudit'
+        codeCoverage:
+          $ref: '#/components/schemas/CodeCoverage'
+        inspections:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApiGetProjectInspection'
+      required:
+        - id
+        - timestamp
+        - licenseAudit
+        - codeCoverage
+        - inspections
+    ApiGetProjectResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        teamId:
+          type: string
+        teamName:
+          type: string
+        defaultBranchName:
+          type: string
+        latestFullScanReport:
+          $ref: '#/components/schemas/ApiGetProjectReport'
+      required:
+        - id
+        - name
+        - teamId
+        - teamName
     ProjectTokenRequest:
       type: object
       properties:
