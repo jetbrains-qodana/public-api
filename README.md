@@ -31,6 +31,10 @@ base URL, i.e. with `qodana.cloud` for Qodana Cloud, or using your custom base U
 
 An organization API token value is referred to as `$permanent_organization_token`.
 
+### Insights Dashboard
+
+You can access your organization's aggregated report data, see the [Grafana template](grafana/README.md) as a reference implementation for a data visualization tool.
+
 ### Create teams and projects
 
 To create a new team (if applicable) along with a project and obtain a [project token](https://www.jetbrains.com/help/qodana/project-token.html), send a `POST` request to the 

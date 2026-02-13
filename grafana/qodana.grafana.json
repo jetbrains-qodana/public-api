@@ -1,7 +1,7 @@
 {
   "__inputs": [
     {
-      "name": "DS_QODANA-INFINITY-DATASOURCE",
+      "name": "DS_QODANA-CLOUD-INFINITY-DATASOURCE",
       "label": "qodana-cloud-infinity-datasource",
       "description": "",
       "type": "datasource",
@@ -33,7 +33,7 @@
       "type": "datasource",
       "id": "yesoreyeram-infinity-datasource",
       "name": "Infinity",
-      "version": "3.6.0"
+      "version": "3.7.1"
     }
   ],
   "annotations": {
@@ -55,7 +55,6 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": null,
   "links": [],
   "panels": [
     {
@@ -2234,7 +2233,7 @@
         {
           "datasource": {
             "type": "yesoreyeram-infinity-datasource",
-            "uid": "${DS_QODANA-INFINITY-DATASOURCE}"
+            "uid": "${DS_QODANA-CLOUD-INFINITY-DATASOURCE}"
           },
           "fieldConfig": {
             "defaults": {
@@ -2395,7 +2394,7 @@
               ],
               "datasource": {
                 "type": "yesoreyeram-infinity-datasource",
-                "uid": "${DS_QODANA-INFINITY-DATASOURCE}"
+                "uid": "${DS_QODANA-CLOUD-INFINITY-DATASOURCE}"
               },
               "filters": [],
               "format": "table",
@@ -2432,7 +2431,7 @@
         "current": {},
         "datasource": {
           "type": "yesoreyeram-infinity-datasource",
-          "uid": "${DS_QODANA-INFINITY-DATASOURCE}"
+          "uid": "${DS_QODANA-CLOUD-INFINITY-DATASOURCE}"
         },
         "definition": "",
         "description": "Projects to include in the dashboard",
@@ -2465,13 +2464,7 @@
                 "type": "string"
               }
             ],
-            "computed_columns": [
-              {
-                "selector": "'\"\"'",
-                "text": "__value",
-                "type": "string"
-              }
-            ],
+            "computed_columns": [],
             "filters": [],
             "format": "table",
             "parser": "backend",
@@ -2490,7 +2483,8 @@
             }
           },
           "query": "",
-          "queryType": "infinity"
+          "queryType": "infinity",
+          "refId": "variable"
         },
         "refresh": 1,
         "regex": "",
@@ -2501,7 +2495,7 @@
         "current": {},
         "datasource": {
           "type": "yesoreyeram-infinity-datasource",
-          "uid": "${DS_QODANA-INFINITY-DATASOURCE}"
+          "uid": "${DS_QODANA-CLOUD-INFINITY-DATASOURCE}"
         },
         "definition": "",
         "description": "Teams to include in the dashboard",
@@ -2524,13 +2518,7 @@
                 "type": "string"
               }
             ],
-            "computed_columns": [
-              {
-                "selector": "'\"\"'",
-                "text": "__value",
-                "type": "string"
-              }
-            ],
+            "computed_columns": [],
             "filters": [],
             "format": "table",
             "parser": "backend",
@@ -2549,7 +2537,8 @@
             }
           },
           "query": "",
-          "queryType": "infinity"
+          "queryType": "infinity",
+          "refId": "variable"
         },
         "refresh": 1,
         "regex": "",
@@ -2560,7 +2549,7 @@
         "current": {},
         "datasource": {
           "type": "yesoreyeram-infinity-datasource",
-          "uid": "${DS_QODANA-INFINITY-DATASOURCE}"
+          "uid": "${DS_QODANA-CLOUD-INFINITY-DATASOURCE}"
         },
         "definition": "",
         "description": "Inspections to include in the dashboard",
@@ -2572,36 +2561,6 @@
         "query": {
           "infinityQuery": {
             "columns": [
-              {
-                "selector": "id",
-                "text": "id",
-                "type": "string"
-              },
-              {
-                "selector": "name",
-                "text": "name",
-                "type": "string"
-              },
-              {
-                "selector": "severity",
-                "text": "severity",
-                "type": "string"
-              },
-              {
-                "selector": "baseline",
-                "text": "baseline",
-                "type": "number"
-              },
-              {
-                "selector": "actual",
-                "text": "actual",
-                "type": "number"
-              },
-              {
-                "selector": "timestamp",
-                "text": "timestamp",
-                "type": "timestamp"
-              },
               {
                 "selector": "id",
                 "text": "__value",
@@ -2616,16 +2575,17 @@
             "source": "url",
             "type": "json",
             "uql": "parse-json",
-            "url": "/organizations/inspection-insights/query",
+            "url": "/organizations/inspections",
             "url_options": {
               "body_content_type": "application/json",
               "body_type": "raw",
               "data": "{}",
-              "method": "POST"
+              "method": "GET"
             }
           },
           "query": "",
-          "queryType": "infinity"
+          "queryType": "infinity",
+          "refId": "variable"
         },
         "refresh": 1,
         "regex": "",
@@ -2715,7 +2675,8 @@
   "timepicker": {},
   "timezone": "utc",
   "title": "Qodana Cloud Insights",
-  "version": 110,
   "uid": "db342401-42e0-4007-aa5a-aa4d385459cc",
-  "weekStart": ""
+  "version": 114,
+  "weekStart": "",
+  "id": null
 }
