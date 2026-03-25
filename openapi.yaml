@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: cloud API
   description: cloud API
-  version: 1.38.0
+  version: 1.39.0
 servers:
   - url: https://cloud
 tags:
@@ -345,6 +345,7 @@ components:
             - NO_HTTPS_OR_SSH_URL
             - NO_TOKEN
             - NO_FILTER_SELECTION
+            - FILTER_SELECTION_NAME_EXISTS
             - WRONG_STATE
             - USER_NOT_LICENSE_ACTIVATION_RECIPIENT
             - LICENSE_ERROR
