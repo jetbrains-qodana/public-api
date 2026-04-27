@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: cloud API
   description: cloud API
-  version: 1.39.5
+  version: 1.39.6
 servers:
   - url: https://cloud
 tags:
@@ -147,6 +147,12 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/APIError'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/APIError'
     post:
       tags:
         - PublicAPI
@@ -233,6 +239,12 @@ paths:
                 $ref: '#/components/schemas/APIError'
         '403':
           description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: Not Found
           content:
             '*/*':
               schema:
@@ -409,6 +421,13 @@ components:
         total:
           type: integer
           format: int32
+      required:
+        - info
+        - low
+        - moderate
+        - high
+        - critical
+        - total
     OrganizationUser:
       type: object
       properties:
@@ -416,22 +435,32 @@ components:
           type: string
         email:
           type: string
+          nullable: true
         displayName:
           type: string
         role:
           type: string
+          nullable: true
           enum:
             - OWNER
             - ADMIN
             - EDITOR
             - VIEWER
+        isActive:
+          type: boolean
+        isSsoManaged:
+          type: boolean
         invitationId:
           type: string
+          nullable: true
         invitationUrl:
           type: string
+          nullable: true
       required:
         - id
         - displayName
+        - isActive
+        - isSsoManaged
     PaginatedList_OrganizationUser:
       type: object
       properties:
@@ -441,14 +470,17 @@ components:
         next:
           type: integer
           format: int64
+          nullable: true
         prev:
           type: integer
           format: int64
+          nullable: true
         items:
           type: array
           items:
             $ref: '#/components/schemas/OrganizationUser'
       required:
+        - count
         - items
     TimeRange:
       type: object
@@ -465,17 +497,24 @@ components:
       properties:
         includeProjectIds:
           type: array
+          nullable: true
           items:
             type: string
+          uniqueItems: true
         includeInspectionIds:
           type: array
+          nullable: true
           items:
             type: string
+          uniqueItems: true
         includeTeamIds:
           type: array
+          nullable: true
           items:
             type: string
+          uniqueItems: true
         timeRange:
+          nullable: true
           $ref: '#/components/schemas/TimeRange'
     ApiQueryInspectionResult:
       type: object
@@ -504,6 +543,8 @@ components:
         - id
         - name
         - severity
+        - baseline
+        - actual
         - timestamp
     ApiQueryInspectionInsightsResponse:
       type: object
@@ -539,9 +580,21 @@ components:
         percentage:
           type: integer
           format: int32
+          nullable: true
+        isEnabled:
+          type: boolean
+      required:
+        - isEnabled
     LicenseAudit:
       type: object
-      properties: {}
+      properties:
+        isPassed:
+          type: boolean
+          nullable: true
+        isEnabled:
+          type: boolean
+      required:
+        - isEnabled
     ApiQueryProject:
       type: object
       properties:
@@ -607,6 +660,8 @@ components:
         - id
         - name
         - severity
+        - baseline
+        - actual
     ApiGetProjectReport:
       type: object
       properties:
@@ -641,7 +696,9 @@ components:
           type: string
         defaultBranchName:
           type: string
+          nullable: true
         latestFullScanReport:
+          nullable: true
           $ref: '#/components/schemas/ApiGetProjectReport'
       required:
         - id
