@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: cloud API
   description: cloud API
-  version: 1.41.2
+  version: 1.41.2+28
 servers:
   - url: https://cloud
 tags:
