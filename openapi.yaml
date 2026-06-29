@@ -1,642 +1,573 @@
-openapi: 3.0.3
+openapi: 3.1.1
 info:
-  title: cloud API
-  description: cloud API
-  version: 1.42.0
-servers:
-  - url: https://cloud
-tags:
-  - name: PublicAPI
-    description: Qodana Cloud Public API
+  title: Qodana Public API
+  version: 1.42.0-12
 paths:
-  /api/v1/public/organizations/inspection-insights/query:
-    post:
-      tags:
-        - PublicAPI
-      description: Runs a query for a list of inspection counts at a point in time across projects.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ApiQueryInsightsRequest'
-        required: true
-      responses:
-        '200':
-          description: OK <br> A list of inspections counts, where one entry exists for each unique combination of inspection ID, severity <br> and timestamp. If a time range is specified, entries for 10 equally distant timestamps within the range are <br> returned. If no time range is specified, entries at the latest timestamp are returned.
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/ApiQueryInspectionInsightsResponse'
-        '400':
-          description: Bad Request
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/APIError'
-        '401':
-          description: Unauthorized
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/APIError'
-        '403':
-          description: Forbidden
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/APIError'
-  /api/v1/public/organizations/inspections:
+  /public/organizations/users:
     get:
-      tags:
-        - PublicAPI
-      description: Returns the list of all inspections including FlexInspect inspections
-      responses:
-        '200':
-          description: OK <br> List of inspections
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/InspectionsListResponse'
-        '400':
-          description: Bad Request
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/APIError'
-        '401':
-          description: Unauthorized
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/APIError'
-        '403':
-          description: Forbidden
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/APIError'
-  /api/v1/public/organizations/project-insights/query:
-    post:
-      tags:
-        - PublicAPI
-      description: Runs a query for a list of projects with scan analysis data at a point in time.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ApiQueryInsightsRequest'
-        required: true
-      responses:
-        '200':
-          description: OK <br> A list of projects with scan data for the given timestamp, where one entry exists for each unique <br> combination of project ID and timestamp. Each entry satisfies ALL conditions in the request body. If a time <br> range is specified, entries for 10 equally distant timestamps within the range are returned. If no time range <br> is specified, entries at the latest timestamp are returned.
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/ApiQueryProjectInsightsResponse'
-        '400':
-          description: Bad Request
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/APIError'
-        '401':
-          description: Unauthorized
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/APIError'
-        '403':
-          description: Forbidden
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/APIError'
-  /api/v1/public/organizations/projects:
-    get:
-      tags:
-        - PublicAPI
-      description: Get a project with report data by name
+      summary: Returns paginated list of users in the organization. Supports sorting
+        and searching.
       parameters:
-        - name: projectName
-          in: query
-          required: false
-          schema:
-            type: string
+      - name: offset
+        in: query
+        schema:
+          type: string
+      - name: limit
+        in: query
+        schema:
+          type: string
+      - name: order
+        in: query
+        schema:
+          type: string
+      - name: search
+        in: query
+        schema:
+          type: string
       responses:
-        '200':
-          description: OK <br> Returns a project with metadata, including the latest report data for the default branch. Note that inspections <br> are only listed for qodana linter versions >= 24.2
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/ApiGetProjectResponse'
-        '400':
+        "400":
           description: Bad Request
           content:
-            '*/*':
+            application/json:
               schema:
-                $ref: '#/components/schemas/APIError'
-        '401':
-          description: Unauthorized
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/APIError'
-        '403':
+                $ref: "#/components/schemas/APIError"
+        "403":
           description: Forbidden
           content:
-            '*/*':
+            application/json:
               schema:
-                $ref: '#/components/schemas/APIError'
-        '404':
-          description: Not Found
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/APIError'
-    post:
-      tags:
-        - PublicAPI
-      description: 'Returns the project token for the specified project. If the team or project does not exist, they will be created automatically. <br> Note: Available for organizations on Ultimate Plus license plan only.'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ProjectTokenRequest'
-        required: true
-      responses:
-        '200':
-          description: OK <br> Project token for the existing project
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/ProjectTokenResponse'
-        '201':
-          description: Created <br> Project token for a newly created project
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/ProjectTokenResponse'
-        '400':
-          description: Bad Request
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/APIError'
-        '401':
+                $ref: "#/components/schemas/APIError"
+        "401":
           description: Unauthorized
           content:
-            '*/*':
+            application/json:
               schema:
-                $ref: '#/components/schemas/APIError'
-        '403':
-          description: Forbidden
+                $ref: "#/components/schemas/APIError"
+        "429":
+          description: Too Many Requests
           content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/APIError'
-        '404':
-          description: Not Found
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/APIError'
-        '500':
+            text/plain: {}
+        "500":
           description: Internal Server Error
           content:
-            '*/*':
+            text/plain: {}
+            application/json:
               schema:
-                $ref: '#/components/schemas/APIError'
-      operationId: getProjectToken
-  /api/v1/public/organizations/projects/{projectId}:
-    get:
-      tags:
-        - PublicAPI
-      description: Get a project with report data by id
-      parameters:
-        - name: projectId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK <br> Returns a project with metadata, including the latest report data for the default branch. Note that inspections <br> are only listed for qodana linter versions >= 24.2
+                $ref: "#/components/schemas/APIError"
+        "200":
+          description: ""
           content:
-            '*/*':
+            application/json:
               schema:
-                $ref: '#/components/schemas/ApiGetProjectResponse'
-        '400':
+                type: object
+                required:
+                - count
+                - items
+                properties:
+                  count:
+                    type: integer
+                  next:
+                    type:
+                    - integer
+                    - "null"
+                  prev:
+                    type:
+                    - integer
+                    - "null"
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/OrganizationUser"
+      security:
+      - organization-api-tokens-jwt: []
+  /public/organizations/inspections:
+    get:
+      summary: Returns the list of all inspections including FlexInspect inspections
+      responses:
+        "400":
           description: Bad Request
           content:
-            '*/*':
+            application/json:
               schema:
-                $ref: '#/components/schemas/APIError'
-        '401':
-          description: Unauthorized
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/APIError'
-        '403':
+                $ref: "#/components/schemas/APIError"
+        "403":
           description: Forbidden
           content:
-            '*/*':
+            application/json:
               schema:
-                $ref: '#/components/schemas/APIError'
-        '404':
-          description: Not Found
+                $ref: "#/components/schemas/APIError"
+        "401":
+          description: Unauthorized
           content:
-            '*/*':
+            application/json:
               schema:
-                $ref: '#/components/schemas/APIError'
-  /api/v1/public/organizations/users:
-    get:
-      tags:
-        - PublicAPI
-      description: 'Returns paginated list of users in the organization. Supports sorting and searching. <br> Note: Available for organizations on Ultimate Plus license plan only.'
-      parameters:
-        - name: offset
-          in: query
-          required: false
-          schema:
-            type: number
-        - name: limit
-          in: query
-          required: false
-          schema:
-            type: integer
-        - name: order
-          in: query
-          required: false
-          schema:
-            type: string
-        - name: search
-          in: query
-          required: false
-          schema:
-            type: string
+                $ref: "#/components/schemas/APIError"
+        "429":
+          description: Too Many Requests
+          content:
+            text/plain: {}
+        "500":
+          description: Internal Server Error
+          content:
+            text/plain: {}
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InspectionsListResponse"
+      security:
+      - organization-api-tokens-jwt: []
+  /public/organizations/projects:
+    post:
+      summary: Returns the project token for the specified project. If the team or
+        project does not exist, they will be created automatically.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProjectTokenRequest"
       responses:
-        '200':
-          description: OK <br> List for organization users
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/PaginatedList_OrganizationUser'
-        '400':
+        "400":
           description: Bad Request
           content:
-            '*/*':
+            application/json:
               schema:
-                $ref: '#/components/schemas/APIError'
-        '401':
-          description: Unauthorized
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/APIError'
-        '403':
+                $ref: "#/components/schemas/APIError"
+        "403":
           description: Forbidden
           content:
-            '*/*':
+            application/json:
               schema:
-                $ref: '#/components/schemas/APIError'
-      operationId: getOrganizationUsers
+                $ref: "#/components/schemas/APIError"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "429":
+          description: Too Many Requests
+          content:
+            text/plain: {}
+        "500":
+          description: Internal Server Error
+          content:
+            text/plain: {}
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectTokenResponse"
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectTokenResponse"
+      security:
+      - organization-api-tokens-jwt: []
+    get:
+      summary: Get a project with report data by name
+      parameters:
+      - name: projectName
+        in: query
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "429":
+          description: Too Many Requests
+          content:
+            text/plain: {}
+        "500":
+          description: Internal Server Error
+          content:
+            text/plain: {}
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiGetProjectResponse"
+      security:
+      - organization-api-tokens-jwt: []
+  /public/organizations/projects/{projectId}:
+    get:
+      summary: Get a project with report data by id
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "429":
+          description: Too Many Requests
+          content:
+            text/plain: {}
+        "500":
+          description: Internal Server Error
+          content:
+            text/plain: {}
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiGetProjectResponse"
+      security:
+      - organization-api-tokens-jwt: []
+  /public/organizations/inspection-insights/query:
+    post:
+      summary: Runs a query for a list of inspection counts at a point in time across
+        projects.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApiQueryInsightsRequest"
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "429":
+          description: Too Many Requests
+          content:
+            text/plain: {}
+        "500":
+          description: Internal Server Error
+          content:
+            text/plain: {}
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiQueryInspectionInsightsResponse"
+      security:
+      - organization-api-tokens-jwt: []
+  /public/organizations/project-insights/query:
+    post:
+      summary: Runs a query for a list of projects with scan analysis data at a point
+        in time.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApiQueryInsightsRequest"
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "429":
+          description: Too Many Requests
+          content:
+            text/plain: {}
+        "500":
+          description: Internal Server Error
+          content:
+            text/plain: {}
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiQueryProjectInsightsResponse"
+      security:
+      - organization-api-tokens-jwt: []
+webhooks: {}
 components:
   schemas:
     APIError:
       type: object
+      title: APIError
+      required:
+      - name
+      - details
       properties:
         name:
           type: string
           enum:
-            - NO_LICENSE_AGREEMENT
-            - USER_DELETED
-            - NO_CREDENTIALS_PROVIDED
-            - VALIDATION_FAILED
-            - INVITE_OR_MEMBERSHIP_REQUEST
-            - PROJECT_EXISTS
-            - TEAM_EXISTS
-            - LICENSE_ISSUING_FAILED
-            - LICENSE_ISSUING_TIMEOUT
-            - LICENSE_NOT_FOUND
-            - INVALID_TOKEN
-            - USER_NOT_MEMBER
-            - USER_INVITATION_NOT_ACCEPTED
-            - SINGLE_ORGANIZATIONS_OWNER
-            - NO_AUTH
-            - TEAMS_MISSING
-            - NO_PERMISSION
-            - NO_LICENSE_PLAN
-            - FEATURE_NOT_SUPPORTED
-            - NO_LICENSE
-            - NO_USER
-            - USER_EXISTS
-            - LICENSE_ACCEPTED
-            - NO_JBA_USER
-            - INVITATION_NOT_CREATED
-            - ORGANIZATION_ROLE_EXISTS
-            - NO_ORGANIZATION
-            - INVITATION_EXPIRED
-            - FAILED_EMAIL_SENDING
-            - NO_TEAM
-            - TEAM_ROLE_EXISTS
-            - NO_TEAM_USER_EXISTS
-            - NO_REPORT
-            - REPORT_UNAVAILABLE
-            - NO_MEMBERSHIP_REQUEST_EXISTS
-            - PROBE_REPOSITORY_FAILED
-            - NO_PROJECT
-            - PROJECT_CONTRIBUTORS_DELETE_FAILURE
-            - LICENSE_ALREADY_ISSUED
-            - BAD_TOKEN
-            - BAD_CREDENTIALS
-            - NO_USER_TOKEN
-            - OAUTH_REFRESH_TOKENS_ERROR
-            - OAUTH_FETCH_MANAGED_CUSTOMERS_ERROR
-            - LICENSE_ALREADY_EXISTS
-            - NO_HTTPS_OR_SSH_URL
-            - NO_TOKEN
-            - NO_FILTER_SELECTION
-            - FILTER_SELECTION_NAME_EXISTS
-            - WRONG_STATE
-            - USER_NOT_LICENSE_ACTIVATION_RECIPIENT
-            - LICENSE_ERROR
-            - ONE_TRIAL_LICENSE_IS_ALLOWED_ERROR
-            - NO_REPOSITORY
-            - JBA_LICENSE_INVITATION_NOT_FOUND
-            - LICENSE_ALREADY_IN_USE
-            - UNKNOWN
-            - NO_SSH_KEY
-            - OWNER_ROLE_CANT_BE_CHANGED
-            - TABLE_SIGNATURE_UNVERIFIED
-            - BROKEN_SIGNATURE_FORMAT
-            - CREATE_REPOSITORY_FAILED
-            - GITHUB_JWT_GENERATION_FAILED
-            - EXTERNAL_SERVICE_REQUEST_FAILED
-            - CI_INTEGRATION_NOT_FOUND
-            - CI_INTEGRATION_ALREADY_EXISTS
-            - VCS_INTEGRATION_NOT_FOUND
-            - VCS_PROBING_NOT_PASSED
-            - VCS_INTEGRATION_ALREADY_EXISTS
-            - GITHUB_INSTALLATION_NOT_EXISTS
-            - UNKNOWN_VCS_LOGIN_STATE
-            - UNKNOWN_VCS_SETUP_ACTION
-            - FORBIDDEN_BASELINE
-            - MISSING_BRANCH_PARAM
-            - BASELINE_NOT_FOUND
-            - INVALID_ROLE
-            - NO_ORGANIZATION_API_TOKEN_EXISTS
-            - ORGANIZATION_API_TOKEN_ALREADY_EXISTS
-            - PROJECT_TOKEN_CREATION_FAILED
-            - TOKEN_ALREADY_EXISTS
-            - GLOBAL_CONFIGURATION_NOT_FOUND
-            - PUBLIC_API_DISABLED
-            - TOO_MANY_PROJECTS_FOR_ORGANIZATION
+          - no_license_agreement
+          - user_deleted
+          - no_credentials_provided
+          - validation_failed
+          - invite_or_membership_request
+          - project_exists
+          - team_exists
+          - license_issuing_failed
+          - license_issuing_timeout
+          - license_not_found
+          - invalid_token
+          - user_not_member
+          - user_invitation_not_accepted
+          - single_organizations_owner
+          - no_auth
+          - teams_missing
+          - no_permission
+          - no_license_plan
+          - feature_not_supported
+          - no_license
+          - no_user
+          - user_exists
+          - license_accepted
+          - no_jba_user
+          - invitation_not_created
+          - organization_role_exists
+          - no_organization
+          - invitation_expired
+          - failed_email_sending
+          - no_team
+          - team_role_exists
+          - no_team_user_exists
+          - no_report
+          - report_unavailable
+          - no_membership_request_exists
+          - probe_repository_failed
+          - no_project
+          - project_contributors_delete_failure
+          - license_already_issued
+          - bad_token
+          - bad_credentials
+          - no_user_token
+          - oauth_refresh_tokens_error
+          - oauth_fetch_managed_customers_error
+          - license_is_already_exists
+          - no_https_or_ssh_url
+          - no_token
+          - no_filter_selection
+          - filter_selection_name_exists
+          - wrong_state
+          - user_not_license_activation_recipient
+          - license_error
+          - one_trial_license_is_allowed_error
+          - no_repository
+          - jba_license_invitation_not_found
+          - license_already_in_use
+          - unknown
+          - no_ssh_key
+          - owner_role_cannot_be_changed
+          - failed_verify_table_signature
+          - broken_signature_format
+          - create_repository_failed
+          - gh_application_jwt_token_generation_failed
+          - external_service_request_failed
+          - ci_integration_not_found
+          - ci_integration_already_exists
+          - vcs_integration_not_found
+          - vcs_probing_not_passed
+          - vcs_integration_already_exists
+          - github_installation_not_exists
+          - unknown_vcs_login_state
+          - setup_action
+          - forbidden_baseline
+          - missing_branch_param
+          - baseline_not_found
+          - invalid_role
+          - no_organization_api_token_exists
+          - organization_api_token_already_exists
+          - project_token_creation_failed
+          - token_already_exists
+          - global_configuration_not_found
+          - public_api_disabled
+          - too_many_projects_for_organization
         details:
           type: string
-      required:
-        - name
-        - details
-    Instant:
-      type: object
-      properties: {}
-    ProblemsBySeverity:
-      type: object
-      properties:
-        info:
-          type: integer
-          format: int32
-        low:
-          type: integer
-          format: int32
-        moderate:
-          type: integer
-          format: int32
-        high:
-          type: integer
-          format: int32
-        critical:
-          type: integer
-          format: int32
-        total:
-          type: integer
-          format: int32
-      required:
-        - info
-        - low
-        - moderate
-        - high
-        - critical
-        - total
     OrganizationUser:
       type: object
+      title: OrganizationUser
+      required:
+      - id
+      - displayName
+      - isActive
       properties:
         id:
           type: string
         email:
-          type: string
-          nullable: true
+          type:
+          - string
+          - "null"
         displayName:
           type: string
         role:
-          type: string
-          nullable: true
+          type:
+          - string
+          - "null"
           enum:
-            - OWNER
-            - ADMIN
-            - EDITOR
-            - VIEWER
+          - OWNER
+          - ADMIN
+          - EDITOR
+          - VIEWER
         isActive:
           type: boolean
         isSsoManaged:
           type: boolean
         invitationId:
-          type: string
-          nullable: true
+          type:
+          - string
+          - "null"
         invitationUrl:
-          type: string
-          nullable: true
-      required:
-        - id
-        - displayName
-        - isActive
-        - isSsoManaged
-    PaginatedList_OrganizationUser:
-      type: object
-      properties:
-        count:
-          type: integer
-          format: int64
-        next:
-          type: integer
-          format: int64
-          nullable: true
-        prev:
-          type: integer
-          format: int64
-          nullable: true
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/OrganizationUser'
-      required:
-        - count
-        - items
-    TimeRange:
-      type: object
-      properties:
-        start:
-          $ref: '#/components/schemas/Instant'
-        end:
-          $ref: '#/components/schemas/Instant'
-      required:
-        - start
-        - end
-    ApiQueryInsightsRequest:
-      type: object
-      properties:
-        includeProjectIds:
-          type: array
-          nullable: true
-          items:
-            type: string
-          uniqueItems: true
-        includeInspectionIds:
-          type: array
-          nullable: true
-          items:
-            type: string
-          uniqueItems: true
-        includeTeamIds:
-          type: array
-          nullable: true
-          items:
-            type: string
-          uniqueItems: true
-        timeRange:
-          nullable: true
-          $ref: '#/components/schemas/TimeRange'
-    ApiQueryInspectionResult:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        severity:
-          type: string
-          enum:
-            - CRITICAL
-            - HIGH
-            - MODERATE
-            - INFO
-            - LOW
-        baseline:
-          type: integer
-          format: int32
-        actual:
-          type: integer
-          format: int32
-        timestamp:
-          $ref: '#/components/schemas/Instant'
-      required:
-        - id
-        - name
-        - severity
-        - baseline
-        - actual
-        - timestamp
-    ApiQueryInspectionInsightsResponse:
-      type: object
-      properties:
-        inspections:
-          type: array
-          items:
-            $ref: '#/components/schemas/ApiQueryInspectionResult'
-      required:
-        - inspections
+          type:
+          - string
+          - "null"
     InspectionResponse:
       type: object
+      title: InspectionResponse
+      required:
+      - id
+      - name
       properties:
         id:
           type: string
         name:
           type: string
-      required:
-        - id
-        - name
     InspectionsListResponse:
       type: object
+      title: InspectionsListResponse
+      required:
+      - inspections
       properties:
         inspections:
           type: array
           items:
-            $ref: '#/components/schemas/InspectionResponse'
-      required:
-        - inspections
-    CodeCoverage:
+            $ref: "#/components/schemas/InspectionResponse"
+    ProjectTokenRequest:
       type: object
-      properties:
-        percentage:
-          type: integer
-          format: int32
-          nullable: true
-        isEnabled:
-          type: boolean
+      title: ProjectTokenRequest
       required:
-        - isEnabled
-    LicenseAudit:
-      type: object
+      - teamName
+      - projectName
       properties:
-        isPassed:
-          type: boolean
-          nullable: true
-        isEnabled:
-          type: boolean
-      required:
-        - isEnabled
-    ApiQueryProject:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        teamId:
-          type: string
         teamName:
           type: string
-        codeCoverage:
-          $ref: '#/components/schemas/CodeCoverage'
-        licenseAudit:
-          $ref: '#/components/schemas/LicenseAudit'
-        severityToActualProblems:
-          $ref: '#/components/schemas/ProblemsBySeverity'
-        severityToBaselineProblems:
-          $ref: '#/components/schemas/ProblemsBySeverity'
-        timestamp:
-          $ref: '#/components/schemas/Instant'
-      required:
-        - id
-        - name
-        - teamId
-        - teamName
-        - codeCoverage
-        - licenseAudit
-        - severityToActualProblems
-        - severityToBaselineProblems
-        - timestamp
-    ApiQueryProjectInsightsResponse:
+        projectName:
+          type: string
+    ProjectTokenResponse:
       type: object
-      properties:
-        projects:
-          type: array
-          items:
-            $ref: '#/components/schemas/ApiQueryProject'
+      title: ProjectTokenResponse
       required:
-        - projects
+      - projectToken
+      properties:
+        projectToken:
+          type: string
+    LicenseAudit:
+      type: object
+      title: LicenseAudit
+      required:
+      - isEnabled
+      properties:
+        isPassed:
+          type:
+          - boolean
+          - "null"
+        isEnabled:
+          type: boolean
+    CodeCoverage:
+      type: object
+      title: CodeCoverage
+      required:
+      - isEnabled
+      properties:
+        percentage:
+          type:
+          - integer
+          - "null"
+        isEnabled:
+          type: boolean
     ApiGetProjectInspection:
       type: object
+      title: ApiGetProjectInspection
+      required:
+      - id
+      - name
+      - severity
+      - baseline
+      - actual
       properties:
         id:
           type: string
@@ -645,46 +576,45 @@ components:
         severity:
           type: string
           enum:
-            - CRITICAL
-            - HIGH
-            - MODERATE
-            - INFO
-            - LOW
+          - critical
+          - high
+          - moderate
+          - info
+          - low
         baseline:
           type: integer
-          format: int32
         actual:
           type: integer
-          format: int32
-      required:
-        - id
-        - name
-        - severity
-        - baseline
-        - actual
     ApiGetProjectReport:
       type: object
+      title: ApiGetProjectReport
+      required:
+      - id
+      - timestamp
+      - licenseAudit
+      - codeCoverage
+      - inspections
       properties:
         id:
           type: string
         timestamp:
-          $ref: '#/components/schemas/Instant'
+          type: string
         licenseAudit:
-          $ref: '#/components/schemas/LicenseAudit'
+          $ref: "#/components/schemas/LicenseAudit"
         codeCoverage:
-          $ref: '#/components/schemas/CodeCoverage'
+          $ref: "#/components/schemas/CodeCoverage"
         inspections:
           type: array
           items:
-            $ref: '#/components/schemas/ApiGetProjectInspection'
-      required:
-        - id
-        - timestamp
-        - licenseAudit
-        - codeCoverage
-        - inspections
+            $ref: "#/components/schemas/ApiGetProjectInspection"
     ApiGetProjectResponse:
       type: object
+      title: ApiGetProjectResponse
+      required:
+      - id
+      - name
+      - teamId
+      - teamName
       properties:
         id:
           type: string
@@ -695,30 +625,161 @@ components:
         teamName:
           type: string
         defaultBranchName:
-          type: string
-          nullable: true
+          type:
+          - string
+          - "null"
         latestFullScanReport:
-          nullable: true
-          $ref: '#/components/schemas/ApiGetProjectReport'
-      required:
-        - id
-        - name
-        - teamId
-        - teamName
-    ProjectTokenRequest:
+          oneOf:
+          - $ref: "#/components/schemas/ApiGetProjectReport"
+          - type: "null"
+        publicKey:
+          type:
+          - string
+          - "null"
+    TimeRange:
       type: object
+      title: TimeRange
+      required:
+      - start
+      - end
       properties:
+        start:
+          type: string
+        end:
+          type: string
+    ApiQueryInsightsRequest:
+      type: object
+      title: ApiQueryInsightsRequest
+      properties:
+        includeProjectIds:
+          type:
+          - array
+          - "null"
+          items:
+            type: string
+        includeInspectionIds:
+          type:
+          - array
+          - "null"
+          items:
+            type: string
+        includeTeamIds:
+          type:
+          - array
+          - "null"
+          items:
+            type: string
+        timeRange:
+          oneOf:
+          - $ref: "#/components/schemas/TimeRange"
+          - type: "null"
+    ApiQueryInspectionResult:
+      type: object
+      title: ApiQueryInspectionResult
+      required:
+      - id
+      - name
+      - severity
+      - baseline
+      - actual
+      - timestamp
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        severity:
+          type: string
+          enum:
+          - critical
+          - high
+          - moderate
+          - info
+          - low
+        baseline:
+          type: integer
+        actual:
+          type: integer
+        timestamp:
+          type: string
+    ApiQueryInspectionInsightsResponse:
+      type: object
+      title: ApiQueryInspectionInsightsResponse
+      required:
+      - inspections
+      properties:
+        inspections:
+          type: array
+          items:
+            $ref: "#/components/schemas/ApiQueryInspectionResult"
+    ProblemsBySeverity:
+      type: object
+      title: ProblemsBySeverity
+      required:
+      - info
+      - low
+      - moderate
+      - high
+      - critical
+      - total
+      properties:
+        info:
+          type: integer
+        low:
+          type: integer
+        moderate:
+          type: integer
+        high:
+          type: integer
+        critical:
+          type: integer
+        total:
+          type: integer
+    ApiQueryProject:
+      type: object
+      title: ApiQueryProject
+      required:
+      - id
+      - name
+      - teamId
+      - teamName
+      - codeCoverage
+      - licenseAudit
+      - severityToActualProblems
+      - severityToBaselineProblems
+      - timestamp
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        teamId:
+          type: string
         teamName:
           type: string
-        projectName:
+        codeCoverage:
+          $ref: "#/components/schemas/CodeCoverage"
+        licenseAudit:
+          $ref: "#/components/schemas/LicenseAudit"
+        severityToActualProblems:
+          $ref: "#/components/schemas/ProblemsBySeverity"
+        severityToBaselineProblems:
+          $ref: "#/components/schemas/ProblemsBySeverity"
+        timestamp:
           type: string
-      required:
-        - teamName
-        - projectName
-    ProjectTokenResponse:
+    ApiQueryProjectInsightsResponse:
       type: object
-      properties:
-        projectToken:
-          type: string
+      title: ApiQueryProjectInsightsResponse
       required:
-        - projectToken
+      - projects
+      properties:
+        projects:
+          type: array
+          items:
+            $ref: "#/components/schemas/ApiQueryProject"
+  securitySchemes:
+    organization-api-tokens-jwt:
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT Bearer Authentication
+      type: http
