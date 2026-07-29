@@ -1,7 +1,7 @@
 openapi: 3.1.1
 info:
   title: Qodana Public API
-  version: 1.42.0-34
+  version: 1.42.0-37
 paths:
   /public/organizations/users:
     get:
@@ -525,6 +525,8 @@ components:
       properties:
         teamName:
           type: string
+        isPublicTeam:
+          type: boolean
         projectName:
           type: string
     ProjectTokenResponse:
