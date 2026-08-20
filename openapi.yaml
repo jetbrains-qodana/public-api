@@ -1,7 +1,7 @@
 openapi: 3.1.1
 info:
   title: Qodana Public API
-  version: 1.44.0-5
+  version: 1.44.0-6
 paths:
   /public/organizations/users:
     get:
