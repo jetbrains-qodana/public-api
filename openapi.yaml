@@ -1,7 +1,7 @@
 openapi: 3.1.1
 info:
   title: Qodana Public API
-  version: 1.44.1-1
+  version: 1.45.0-2
 paths:
   /public/organizations/users:
     get:
@@ -456,7 +456,7 @@ components:
           - global_configuration_not_found
           - public_api_disabled
           - too_many_projects_for_organization
-          - too_many_viewed_problems_for_project
+          - too_many_problems_for_project
         details:
           type: string
     OrganizationUser:
