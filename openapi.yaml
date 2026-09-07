@@ -1,7 +1,7 @@
 openapi: 3.1.1
 info:
   title: Qodana Public API
-  version: 1.46.0-10
+  version: 1.46.0-11
 paths:
   /public/organizations/users:
     get:
@@ -125,6 +125,12 @@ paths:
     post:
       summary: Returns the project token for the specified project. If the team or
         project does not exist, they will be created automatically.
+
+        Team and project names are matched ignoring case and spaces, so "My Team"
+        and "my-team" refer to the same team.
+
+        Pass tokenTtlSeconds to get a short-lived token that expires after that many
+        seconds instead of the project's long-lived token.
       requestBody:
         content:
           application/json:
@@ -530,6 +536,10 @@ components:
           type: boolean
         projectName:
           type: string
+        tokenTtlSeconds:
+          type:
+          - integer
+          - "null"
     ProjectTokenResponse:
       type: object
       title: ProjectTokenResponse
@@ -538,6 +548,10 @@ components:
       properties:
         projectToken:
           type: string
+        expiresAt:
+          type:
+          - string
+          - "null"
     LicenseAudit:
       type: object
       title: LicenseAudit
