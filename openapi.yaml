@@ -1,29 +1,11 @@
 openapi: 3.1.1
 info:
   title: Qodana Public API
-  version: 1.49.0-2
+  version: 1.49.0-3
 paths:
   /public/organizations/users:
     get:
-      summary: Returns paginated list of users in the organization. Supports sorting
-        and searching.
-      parameters:
-      - name: offset
-        in: query
-        schema:
-          type: string
-      - name: limit
-        in: query
-        schema:
-          type: string
-      - name: order
-        in: query
-        schema:
-          type: string
-      - name: search
-        in: query
-        schema:
-          type: string
+      summary: ""
       responses:
         "400":
           description: Bad Request
@@ -54,35 +36,11 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/APIError"
-        "200":
-          description: ""
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                - count
-                - items
-                properties:
-                  count:
-                    type: integer
-                  next:
-                    type:
-                    - integer
-                    - "null"
-                  prev:
-                    type:
-                    - integer
-                    - "null"
-                  items:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/OrganizationUser"
       security:
       - organization-api-tokens-jwt: []
   /public/organizations/inspections:
     get:
-      summary: Returns the list of all inspections including FlexInspect inspections
+      summary: ""
       responses:
         "400":
           description: Bad Request
@@ -113,29 +71,11 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/APIError"
-        "200":
-          description: ""
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InspectionsListResponse"
       security:
       - organization-api-tokens-jwt: []
   /public/organizations/projects:
     post:
-      summary: Returns the project token for the specified project. If the team or
-        project does not exist, they will be created automatically.
-
-        Team and project names are matched ignoring case and spaces, so "My Team"
-        and "my-team" refer to the same team.
-
-        Pass tokenTtlSeconds to get a short-lived token that expires after that many
-        seconds instead of the project's long-lived token.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ProjectTokenRequest"
+      summary: ""
       responses:
         "400":
           description: Bad Request
@@ -166,27 +106,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/APIError"
-        "201":
-          description: ""
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ProjectTokenResponse"
-        "200":
-          description: ""
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ProjectTokenResponse"
       security:
       - organization-api-tokens-jwt: []
     get:
-      summary: Get a project with report data by name
-      parameters:
-      - name: projectName
-        in: query
-        schema:
-          type: string
+      summary: ""
       responses:
         "400":
           description: Bad Request
@@ -217,17 +140,11 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/APIError"
-        "200":
-          description: ""
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ApiGetProjectResponse"
       security:
       - organization-api-tokens-jwt: []
   /public/organizations/projects/{projectId}:
     get:
-      summary: Get a project with report data by id
+      summary: ""
       parameters:
       - name: projectId
         in: path
@@ -264,23 +181,11 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/APIError"
-        "200":
-          description: ""
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ApiGetProjectResponse"
       security:
       - organization-api-tokens-jwt: []
   /public/organizations/inspection-insights/query:
     post:
-      summary: Runs a query for a list of inspection counts at a point in time across
-        projects.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ApiQueryInsightsRequest"
+      summary: ""
       responses:
         "400":
           description: Bad Request
@@ -311,23 +216,11 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/APIError"
-        "200":
-          description: ""
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ApiQueryInspectionInsightsResponse"
       security:
       - organization-api-tokens-jwt: []
   /public/organizations/project-insights/query:
     post:
-      summary: Runs a query for a list of projects with scan analysis data at a point
-        in time.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ApiQueryInsightsRequest"
+      summary: ""
       responses:
         "400":
           description: Bad Request
@@ -358,12 +251,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/APIError"
-        "200":
-          description: ""
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ApiQueryProjectInsightsResponse"
       security:
       - organization-api-tokens-jwt: []
 webhooks: {}
@@ -466,340 +353,6 @@ components:
           - too_many_problems_for_project
         details:
           type: string
-    OrganizationUser:
-      type: object
-      title: OrganizationUser
-      required:
-      - id
-      - displayName
-      - isActive
-      properties:
-        id:
-          type: string
-        email:
-          type:
-          - string
-          - "null"
-        displayName:
-          type: string
-        role:
-          type:
-          - string
-          - "null"
-          enum:
-          - OWNER
-          - ADMIN
-          - EDITOR
-          - VIEWER
-        isActive:
-          type: boolean
-        isSsoManaged:
-          type: boolean
-        invitationId:
-          type:
-          - string
-          - "null"
-        invitationUrl:
-          type:
-          - string
-          - "null"
-    InspectionResponse:
-      type: object
-      title: InspectionResponse
-      required:
-      - id
-      - name
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-    InspectionsListResponse:
-      type: object
-      title: InspectionsListResponse
-      required:
-      - inspections
-      properties:
-        inspections:
-          type: array
-          items:
-            $ref: "#/components/schemas/InspectionResponse"
-    ProjectTokenRequest:
-      type: object
-      title: ProjectTokenRequest
-      properties:
-        teamName:
-          type:
-          - string
-          - "null"
-        isPublicTeam:
-          type: boolean
-        projectName:
-          type:
-          - string
-          - "null"
-        projectQualifiedSlug:
-          type:
-          - string
-          - "null"
-        tokenTtlSeconds:
-          type:
-          - integer
-          - "null"
-    ProjectTokenResponse:
-      type: object
-      title: ProjectTokenResponse
-      required:
-      - projectToken
-      properties:
-        projectToken:
-          type: string
-        expiresAt:
-          type:
-          - string
-          - "null"
-    LicenseAudit:
-      type: object
-      title: LicenseAudit
-      required:
-      - isEnabled
-      properties:
-        isPassed:
-          type:
-          - boolean
-          - "null"
-        isEnabled:
-          type: boolean
-    CodeCoverage:
-      type: object
-      title: CodeCoverage
-      required:
-      - isEnabled
-      properties:
-        percentage:
-          type:
-          - integer
-          - "null"
-        isEnabled:
-          type: boolean
-    ApiGetProjectInspection:
-      type: object
-      title: ApiGetProjectInspection
-      required:
-      - id
-      - name
-      - severity
-      - baseline
-      - actual
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        severity:
-          type: string
-          enum:
-          - critical
-          - high
-          - moderate
-          - info
-          - low
-        baseline:
-          type: integer
-        actual:
-          type: integer
-    ApiGetProjectReport:
-      type: object
-      title: ApiGetProjectReport
-      required:
-      - id
-      - timestamp
-      - licenseAudit
-      - codeCoverage
-      - inspections
-      properties:
-        id:
-          type: string
-        timestamp:
-          type: string
-        licenseAudit:
-          $ref: "#/components/schemas/LicenseAudit"
-        codeCoverage:
-          $ref: "#/components/schemas/CodeCoverage"
-        inspections:
-          type: array
-          items:
-            $ref: "#/components/schemas/ApiGetProjectInspection"
-    ApiGetProjectResponse:
-      type: object
-      title: ApiGetProjectResponse
-      required:
-      - id
-      - name
-      - teamId
-      - teamName
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        teamId:
-          type: string
-        teamName:
-          type: string
-        defaultBranchName:
-          type:
-          - string
-          - "null"
-        latestFullScanReport:
-          oneOf:
-          - $ref: "#/components/schemas/ApiGetProjectReport"
-          - type: "null"
-        publicKey:
-          type:
-          - string
-          - "null"
-    TimeRange:
-      type: object
-      title: TimeRange
-      required:
-      - start
-      - end
-      properties:
-        start:
-          type: string
-        end:
-          type: string
-    ApiQueryInsightsRequest:
-      type: object
-      title: ApiQueryInsightsRequest
-      properties:
-        includeProjectIds:
-          type:
-          - array
-          - "null"
-          items:
-            type: string
-        includeInspectionIds:
-          type:
-          - array
-          - "null"
-          items:
-            type: string
-        includeTeamIds:
-          type:
-          - array
-          - "null"
-          items:
-            type: string
-        timeRange:
-          oneOf:
-          - $ref: "#/components/schemas/TimeRange"
-          - type: "null"
-    ApiQueryInspectionResult:
-      type: object
-      title: ApiQueryInspectionResult
-      required:
-      - id
-      - name
-      - severity
-      - baseline
-      - actual
-      - timestamp
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        severity:
-          type: string
-          enum:
-          - critical
-          - high
-          - moderate
-          - info
-          - low
-        baseline:
-          type: integer
-        actual:
-          type: integer
-        timestamp:
-          type: string
-    ApiQueryInspectionInsightsResponse:
-      type: object
-      title: ApiQueryInspectionInsightsResponse
-      required:
-      - inspections
-      properties:
-        inspections:
-          type: array
-          items:
-            $ref: "#/components/schemas/ApiQueryInspectionResult"
-    ProblemsBySeverity:
-      type: object
-      title: ProblemsBySeverity
-      required:
-      - info
-      - low
-      - moderate
-      - high
-      - critical
-      - total
-      properties:
-        info:
-          type: integer
-        low:
-          type: integer
-        moderate:
-          type: integer
-        high:
-          type: integer
-        critical:
-          type: integer
-        total:
-          type: integer
-    ApiQueryProject:
-      type: object
-      title: ApiQueryProject
-      required:
-      - id
-      - name
-      - teamId
-      - teamName
-      - codeCoverage
-      - licenseAudit
-      - severityToActualProblems
-      - severityToBaselineProblems
-      - timestamp
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        teamId:
-          type: string
-        teamName:
-          type: string
-        codeCoverage:
-          $ref: "#/components/schemas/CodeCoverage"
-        licenseAudit:
-          $ref: "#/components/schemas/LicenseAudit"
-        severityToActualProblems:
-          $ref: "#/components/schemas/ProblemsBySeverity"
-        severityToBaselineProblems:
-          $ref: "#/components/schemas/ProblemsBySeverity"
-        timestamp:
-          type: string
-    ApiQueryProjectInsightsResponse:
-      type: object
-      title: ApiQueryProjectInsightsResponse
-      required:
-      - projects
-      properties:
-        projects:
-          type: array
-          items:
-            $ref: "#/components/schemas/ApiQueryProject"
   securitySchemes:
     organization-api-tokens-jwt:
       scheme: bearer
