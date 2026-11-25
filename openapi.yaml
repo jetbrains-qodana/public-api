@@ -1,12 +1,14 @@
 openapi: 3.1.1
 info:
   title: Qodana Public API
-  version: 1.50.0-64
+  version: 1.50.0-68
 paths:
   /public/organizations/users:
     get:
       summary: Returns paginated list of users in the organization. Supports sorting
         and searching.
+
+        A team-scoped organization API token only sees active members of its teams.
       parameters:
       - name: offset
         in: query
@@ -131,6 +133,11 @@ paths:
 
         Pass tokenTtlSeconds to get a short-lived token that expires after that many
         seconds instead of the project's long-lived token.
+
+        A team-scoped organization API token only reaches its own teams, never creates
+        a team, and always gets a
+
+        short-lived token (one hour unless tokenTtlSeconds says otherwise).
       requestBody:
         content:
           application/json:
@@ -276,6 +283,9 @@ paths:
     post:
       summary: Runs a query for a list of inspection counts at a point in time across
         projects.
+
+        With a team-scoped token, the query covers only its teams, and `includeTeamIds`
+        outside them returns 403.
       requestBody:
         content:
           application/json:
@@ -326,6 +336,9 @@ paths:
 
         With `includeInspectionIds`, only projects with at least one result of these
         inspections are returned.
+
+        With a team-scoped token, the query covers only its teams, and `includeTeamIds`
+        outside them returns 403.
       requestBody:
         content:
           application/json:
@@ -367,6 +380,146 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiQueryProjectInsightsResponse"
+      security:
+      - organization-api-tokens-jwt: []
+  /public/organizations/tokens:
+    post:
+      summary: 'Creates an organization API token limited to the teams in `scope`:
+        it returns project tokens for their
+
+        projects (creating missing projects, never teams) and reads only their data.
+
+        The token is returned once and cannot be retrieved later. It stays valid until
+        it expires or is revoked,
+
+        even if the organization API token that created it is deleted.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrganizationApiScopedTokenCreateRequest"
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "429":
+          description: Too Many Requests
+          content:
+            text/plain: {}
+        "500":
+          description: Internal Server Error
+          content:
+            text/plain: {}
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrganizationApiScopedTokenCreateResponse"
+      security:
+      - organization-api-tokens-jwt: []
+    get:
+      summary: Lists the organization's scoped API tokens without their values.
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "429":
+          description: Too Many Requests
+          content:
+            text/plain: {}
+        "500":
+          description: Internal Server Error
+          content:
+            text/plain: {}
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OrganizationApiScopedTokenResponse"
+      security:
+      - organization-api-tokens-jwt: []
+  /public/organizations/tokens/{tokenId}:
+    delete:
+      summary: Revokes a scoped API token. Project tokens it handed out stop working
+        at once.
+      parameters:
+      - name: tokenId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "429":
+          description: Too Many Requests
+          content:
+            text/plain: {}
+        "500":
+          description: Internal Server Error
+          content:
+            text/plain: {}
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "204":
+          description: ""
       security:
       - organization-api-tokens-jwt: []
 webhooks: {}
@@ -803,6 +956,72 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/ApiQueryProjectInsightsResponse.ApiQueryProject"
+    OrganizationApiScopedTokenScope:
+      type: object
+      title: OrganizationApiScopedTokenScope
+      required:
+      - teamIds
+      properties:
+        teamIds:
+          type: array
+          items:
+            type: string
+    OrganizationApiScopedTokenResponse:
+      type: object
+      title: OrganizationApiScopedTokenResponse
+      required:
+      - id
+      - name
+      - scope
+      - createdAt
+      - expiresAt
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        scope:
+          $ref: "#/components/schemas/OrganizationApiScopedTokenScope"
+        createdAt:
+          type: string
+        expiresAt:
+          type: string
+    OrganizationApiScopedTokenCreateRequest:
+      type: object
+      title: OrganizationApiScopedTokenCreateRequest
+      required:
+      - name
+      - scope
+      properties:
+        name:
+          type: string
+        scope:
+          $ref: "#/components/schemas/OrganizationApiScopedTokenScope"
+        expiresInDays:
+          type: integer
+    OrganizationApiScopedTokenCreateResponse:
+      type: object
+      title: OrganizationApiScopedTokenCreateResponse
+      required:
+      - id
+      - name
+      - token
+      - scope
+      - createdAt
+      - expiresAt
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        token:
+          type: string
+        scope:
+          $ref: "#/components/schemas/OrganizationApiScopedTokenScope"
+        createdAt:
+          type: string
+        expiresAt:
+          type: string
   securitySchemes:
     organization-api-tokens-jwt:
       scheme: bearer
