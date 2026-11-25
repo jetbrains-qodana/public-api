@@ -1,7 +1,7 @@
 openapi: 3.1.1
 info:
   title: Qodana Public API
-  version: 1.50.0-70
+  version: 1.50.0-71
 paths:
   /public/organizations/users:
     get:
@@ -617,7 +617,6 @@ components:
           - project_token_creation_failed
           - token_already_exists
           - global_configuration_not_found
-          - public_api_disabled
           - too_many_projects_for_organization
           - too_many_problems_for_project
         details:
